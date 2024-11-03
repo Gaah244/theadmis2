@@ -6,7 +6,6 @@
     <title>Progresso dos Membros</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        /* Estilos de fundo no estilo embutido */
         body {
             background-image: url("{{ url_for('static', filename='img/1918.webp') }}");
             background-size: cover;
@@ -19,12 +18,10 @@
             padding: 0;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Garante que o body ocupe a altura total da janela */
+            min-height: 100vh;
         }
-
-        /* Estilo para a faixa azul transparente */
         .top-bar {
-            background-color: rgba(0, 0, 255, 0.37); /* Azul com transparência */
+            background-color: rgba(0, 0, 255, 0.37);
             color: white;
             padding: 10px 0;
             position: fixed;
@@ -36,8 +33,6 @@
             text-align: center;
             z-index: 1;
         }
-
-        /* Botão de menu */
         .menu-button {
             position: fixed;
             top: 10px;
@@ -50,8 +45,6 @@
             cursor: pointer;
             z-index: 2;
         }
-
-        /* Estilo para o menu */
         .menu {
             display: none;
             position: absolute;
@@ -62,48 +55,40 @@
             padding: 10px;
             z-index: 2;
         }
-
         .menu-button.active + .menu {
             display: block;
         }
-
-        /* Estilo para o rodapé */
         footer {
-            background-color: rgba(0, 0, 255, 0.37); /* Fundo azul com transparência */
+            background-color: rgba(0, 0, 255, 0.37);
             padding: 10px 0;
             text-align: center;
             width: 100%;
         }
-
-        /* Estilo para os membros */
         .membros {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             margin: 20px;
+            margin-top: 80px; /* Para evitar sobreposição com a barra superior */
         }
-
         .membro {
             background: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
             margin: 10px;
             padding: 20px;
-            width: 200px; /* Largura fixa */
+            width: 200px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s; /* Efeito de transição */
+            transition: transform 0.2s;
         }
-
         .membro:hover {
-            transform: scale(1.05); /* Aumenta o tamanho ao passar o mouse */
+            transform: scale(1.05);
         }
-
         .progress-bar {
             background-color: #f3f3f3;
             border-radius: 10px;
             overflow: hidden;
             margin-top: 10px;
         }
-
         .progress {
             height: 20px;
             background-color: #4caf50;
@@ -111,30 +96,24 @@
             line-height: 20px;
             color: white;
         }
-
-        /* Estilo da imagem do membro */
         .member-image {
-            width: 80px; /* Aumenta a largura da imagem */
-            height: 80px; /* Aumenta a altura da imagem */
-            border-radius: 50%; /* Arredonda a imagem */
-            object-fit: cover; /* Cobre a área da imagem */
-            margin-bottom: 10px; /* Espaçamento inferior da imagem */
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
         }
-
-        /* Responsividade */
         @media (max-width: 600px) {
             .membro {
-                width: 90%; /* Largura adaptável para dispositivos menores */
+                width: 90%;
             }
-
             .top-bar {
-                font-size: 20px; /* Tamanho da fonte reduzido */
+                font-size: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Faixa azul transparente -->
     <div class="top-bar">
         The Admins
         <button class="menu-button" onclick="toggleMenu()">Menu</button>
@@ -143,7 +122,6 @@
         </div>
     </div>
 
-    <!-- Conteúdo principal com margem superior -->
     <div class="content">
         <h1>Progresso dos Membros</h1>
         <div class="membros">
@@ -161,12 +139,11 @@
                     {% endif %}
                 </div>
             {% else %}
-                <p>Nenhum membro encontrado.</p> <!-- Exibe mensagem se não houver membros -->
+                <p>Nenhum membro encontrado.</p>
             {% endfor %}
         </div>
     </div>
 
-    <!-- Rodapé -->
     <footer>
         <p>by zetsu</p>
     </footer>
@@ -179,6 +156,7 @@
     </script>
 </body>
 </html>
+
 
 
 
