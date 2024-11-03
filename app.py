@@ -14,7 +14,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS membros (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
-                progresso INTEGER NOT NULL CHECK (progresso >= 0 AND progresso <= 100),
+                progresso INTEGER NOT NULL,
                 foto TEXT
             )
         ''')
@@ -105,8 +105,9 @@ def aumentar_progresso():
         try:
             conn = sqlite3.connect('membros.db')
             cursor = conn.cursor()
-            cursor.execute("UPDATE membros SET progresso = LEAST(progresso + 10, 100) WHERE id = ?", (membro_id,))
+            cursor.execute("UPDATE membros SET progresso = MIN(progresso + 10, 100) WHERE id = ?", (membro_id,))
             conn.commit()
+            print(f"Progresso aumentado para o membro ID {membro_id}.")
         except Exception as e:
             print(f"Erro ao aumentar progresso: {e}")
         finally:
@@ -121,8 +122,9 @@ def diminuir_progresso():
         try:
             conn = sqlite3.connect('membros.db')
             cursor = conn.cursor()
-            cursor.execute("UPDATE membros SET progresso = GREATEST(progresso - 10, 0) WHERE id = ?", (membro_id,))
+            cursor.execute("UPDATE membros SET progresso = MAX(progresso - 10, 0) WHERE id = ?", (membro_id,))
             conn.commit()
+            print(f"Progresso diminuído para o membro ID {membro_id}.")
         except Exception as e:
             print(f"Erro ao diminuir progresso: {e}")
         finally:
@@ -139,6 +141,7 @@ def remover_membro():
             cursor = conn.cursor()
             cursor.execute("DELETE FROM membros WHERE id = ?", (membro_id,))
             conn.commit()
+            print(f"Membro ID {membro_id} removido.")
         except Exception as e:
             print(f"Erro ao remover membro: {e}")
         finally:
@@ -153,6 +156,5 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
