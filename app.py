@@ -64,18 +64,20 @@ def adicionar_membro():
         return redirect(url_for('login'))
     
     if request.method == 'POST':
-        nome = request.form['nome']
-        progresso = int(request.form['progresso'])
-        try:
-            conn = sqlite3.connect('membros.db')
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO membros (nome, progresso) VALUES (?, ?)", (nome, progresso))
-            conn.commit()
-        except Exception as e:
-            print(f"Erro ao adicionar membro: {e}")
-        finally:
-            conn.close()
-        return redirect(url_for('index'))
+        nome = request.form.get('nome')
+        progresso = request.form.get('progresso')
+        
+        if nome and progresso:
+            try:
+                conn = sqlite3.connect('membros.db')
+                cursor = conn.cursor()
+                cursor.execute("INSERT INTO membros (nome, progresso) VALUES (?, ?)", (nome, int(progresso)))
+                conn.commit()
+            except Exception as e:
+                print(f"Erro ao adicionar membro: {e}")
+            finally:
+                conn.close()
+            return redirect(url_for('index'))
     
     try:
         conn = sqlite3.connect('membros.db')
@@ -93,46 +95,49 @@ def adicionar_membro():
 # Rota para aumentar o progresso de um membro
 @app.route('/aumentar_progresso', methods=['POST'])
 def aumentar_progresso():
-    membro_id = request.form['membro_id']
-    try:
-        conn = sqlite3.connect('membros.db')
-        cursor = conn.cursor()
-        cursor.execute("UPDATE membros SET progresso = MIN(progresso + 10, 100) WHERE id = ?", (membro_id,))
-        conn.commit()
-    except Exception as e:
-        print(f"Erro ao aumentar progresso: {e}")
-    finally:
-        conn.close()
+    membro_id = request.form.get('membro_id')
+    if membro_id:
+        try:
+            conn = sqlite3.connect('membros.db')
+            cursor = conn.cursor()
+            cursor.execute("UPDATE membros SET progresso = MIN(progresso + 10, 100) WHERE id = ?", (membro_id,))
+            conn.commit()
+        except Exception as e:
+            print(f"Erro ao aumentar progresso: {e}")
+        finally:
+            conn.close()
     return redirect(url_for('adicionar_membro'))
 
 # Rota para diminuir o progresso de um membro
 @app.route('/diminuir_progresso', methods=['POST'])
 def diminuir_progresso():
-    membro_id = request.form['membro_id']
-    try:
-        conn = sqlite3.connect('membros.db')
-        cursor = conn.cursor()
-        cursor.execute("UPDATE membros SET progresso = MAX(progresso - 10, 0) WHERE id = ?", (membro_id,))
-        conn.commit()
-    except Exception as e:
-        print(f"Erro ao diminuir progresso: {e}")
-    finally:
-        conn.close()
+    membro_id = request.form.get('membro_id')
+    if membro_id:
+        try:
+            conn = sqlite3.connect('membros.db')
+            cursor = conn.cursor()
+            cursor.execute("UPDATE membros SET progresso = MAX(progresso - 10, 0) WHERE id = ?", (membro_id,))
+            conn.commit()
+        except Exception as e:
+            print(f"Erro ao diminuir progresso: {e}")
+        finally:
+            conn.close()
     return redirect(url_for('adicionar_membro'))
 
 # Rota para remover membro
 @app.route('/remover', methods=['POST'])
 def remover_membro():
-    membro_id = request.form['membro_id']
-    try:
-        conn = sqlite3.connect('membros.db')
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM membros WHERE id = ?", (membro_id,))
-        conn.commit()
-    except Exception as e:
-        print(f"Erro ao remover membro: {e}")
-    finally:
-        conn.close()
+    membro_id = request.form.get('membro_id')
+    if membro_id:
+        try:
+            conn = sqlite3.connect('membros.db')
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM membros WHERE id = ?", (membro_id,))
+            conn.commit()
+        except Exception as e:
+            print(f"Erro ao remover membro: {e}")
+        finally:
+            conn.close()
     return redirect(url_for('adicionar_membro'))
 
 # Rota para logout
@@ -143,7 +148,5 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
 
 
