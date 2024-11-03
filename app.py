@@ -14,7 +14,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS membros (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
-                progresso INTEGER NOT NULL,
+                progresso INTEGER NOT NULL CHECK (progresso >= 0 AND progresso <= 100),
                 foto TEXT
             )
         ''')
@@ -105,7 +105,7 @@ def aumentar_progresso():
         try:
             conn = sqlite3.connect('membros.db')
             cursor = conn.cursor()
-            cursor.execute("UPDATE membros SET progresso = MIN(progresso + 10, 100) WHERE id = ?", (membro_id,))
+            cursor.execute("UPDATE membros SET progresso = LEAST(progresso + 10, 100) WHERE id = ?", (membro_id,))
             conn.commit()
         except Exception as e:
             print(f"Erro ao aumentar progresso: {e}")
@@ -121,7 +121,7 @@ def diminuir_progresso():
         try:
             conn = sqlite3.connect('membros.db')
             cursor = conn.cursor()
-            cursor.execute("UPDATE membros SET progresso = MAX(progresso - 10, 0) WHERE id = ?", (membro_id,))
+            cursor.execute("UPDATE membros SET progresso = GREATEST(progresso - 10, 0) WHERE id = ?", (membro_id,))
             conn.commit()
         except Exception as e:
             print(f"Erro ao diminuir progresso: {e}")
@@ -153,5 +153,6 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
