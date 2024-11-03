@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Progresso dos Membros</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
@@ -40,11 +41,13 @@
         .content {
             margin-top: 60px; /* Deixa espaço para a faixa */
             flex: 1; /* Faz o conteúdo ocupar o espaço restante da página */
+            padding: 20px; /* Espaçamento ao redor do conteúdo */
+            box-sizing: border-box; /* Para incluir padding nas dimensões */
         }
 
         /* Estilo para o rodapé */
         footer {
-            background-color: rgba(0, 0, 255, 0.37); /* Fundo branco com transparência */
+            background-color: rgba(0, 0, 255, 0.37); /* Fundo azul com transparência */
             padding: 10px 0;
             text-align: center;
             width: 100%;
@@ -63,8 +66,13 @@
             border-radius: 10px;
             margin: 10px;
             padding: 20px;
-            width: 200px;
+            width: 200px; /* Largura fixa */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s; /* Efeito de transição */
+        }
+
+        .membro:hover {
+            transform: scale(1.05); /* Aumenta o tamanho ao passar o mouse */
         }
 
         .progress-bar {
@@ -84,11 +92,22 @@
 
         /* Estilo da imagem do membro */
         .member-image {
-            width: 50px; /* Largura da imagem */
-            height: 50px; /* Altura da imagem */
+            width: 80px; /* Aumenta a largura da imagem */
+            height: 80px; /* Aumenta a altura da imagem */
             border-radius: 50%; /* Arredonda a imagem */
             object-fit: cover; /* Cobre a área da imagem */
             margin-bottom: 10px; /* Espaçamento inferior da imagem */
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .membro {
+                width: 90%; /* Largura adaptável para dispositivos menores */
+            }
+
+            .top-bar {
+                font-size: 20px; /* Tamanho da fonte reduzido */
+            }
         }
     </style>
 </head>
@@ -127,6 +146,7 @@
     </footer>
 </body>
 </html>
+
 
 
 
