@@ -19,6 +19,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            position: relative; /* Para a animação */
         }
         .top-bar {
             background-color: rgba(0, 0, 255, 0.37);
@@ -114,6 +115,50 @@
             object-fit: cover;
             margin-bottom: 10px;
         }
+        /* Efeito de chuva de caracteres */
+        .matrix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none; /* Não interfere na interação com outros elementos */
+            z-index: 0; /* Fica atrás do conteúdo */
+        }
+        .matrix div {
+            position: absolute;
+            color: #00ff00; /* Verde hacker */
+            white-space: nowrap;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+        /* Animação do título "The Admins" */
+        .title {
+            display: inline-block;
+            animation: glitch 1s infinite;
+            color: #00ff00;
+        }
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 red; }
+            20% { text-shadow: -2px 0 blue; }
+            40% { text-shadow: 2px 0 green; }
+            60% { text-shadow: -2px 0 yellow; }
+            80% { text-shadow: 2px 0 purple; }
+            100% { text-shadow: -2px 0 cyan; }
+        }
         @media (max-width: 600px) {
             .membro {
                 width: 90%;
@@ -126,15 +171,30 @@
 </head>
 <body>
     <div class="top-bar">
-        The Admins
+        <span class="title">The Admins</span>
         <button class="menu-button" onclick="toggleMenu()">Menu</button>
         <div class="menu">
             <a href="missao" style="color: white; text-decoration: none;">Missões</a>
         </div>
     </div>
 
+    <div class="matrix">
+        <div style="left: 10%; animation-duration: 2.5s;">01001010</div>
+        <div style="left: 20%; animation-duration: 3s;">10111011</div>
+        <div style="left: 30%; animation-duration: 2.2s;">01101100</div>
+        <div style="left: 40%; animation-duration: 2.8s;">11010101</div>
+        <div style="left: 50%; animation-duration: 3.5s;">10010100</div>
+        <div style="left: 60%; animation-duration: 2.4s;">11100011</div>
+        <div style="left: 70%; animation-duration: 3.2s;">00011101</div>
+        <div style="left: 80%; animation-duration: 3.1s;">10100001</div>
+        <div style="left: 90%; animation-duration: 2.7s;">01111001</div>
+    </div>
+
     <div class="content">
         <h1 style="margin-top: 60px;">Progresso dos Membros</h1>
+        <p>
+            Seletiva 2024
+        </p>
         <div class="membros">
             {% for membro in membros %}
                 <div class="membro">
@@ -169,19 +229,6 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
