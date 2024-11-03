@@ -37,12 +37,34 @@
             z-index: 1;
         }
 
-        /* Ajuste de margem para o conteúdo principal para não ficar atrás da faixa */
-        .content {
-            margin-top: 60px; /* Deixa espaço para a faixa */
-            flex: 1; /* Faz o conteúdo ocupar o espaço restante da página */
-            padding: 20px; /* Espaçamento ao redor do conteúdo */
-            box-sizing: border-box; /* Para incluir padding nas dimensões */
+        /* Botão de menu */
+        .menu-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 255, 0.8);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        /* Estilo para o menu */
+        .menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            background-color: rgba(0, 0, 255, 0.8);
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 2;
+        }
+
+        .menu-button.active + .menu {
+            display: block;
         }
 
         /* Estilo para o rodapé */
@@ -115,6 +137,10 @@
     <!-- Faixa azul transparente -->
     <div class="top-bar">
         The Admins
+        <button class="menu-button" onclick="toggleMenu()">Menu</button>
+        <div class="menu">
+            <a href="missao.html" style="color: white; text-decoration: none;">Missões</a>
+        </div>
     </div>
 
     <!-- Conteúdo principal com margem superior -->
@@ -144,6 +170,13 @@
     <footer>
         <p>by zetsu</p>
     </footer>
+
+    <script>
+        function toggleMenu() {
+            const menuButton = document.querySelector('.menu-button');
+            menuButton.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
 
