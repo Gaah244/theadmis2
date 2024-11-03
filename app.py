@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 
 # Inicialize o app
 app = Flask(__name__)
@@ -43,6 +43,11 @@ def index():
     
     membros = [{"id": m[0], "nome": m[1], "progresso": m[2], "foto": m[3] or "default.jpg"} for m in membros]
     return render_template('index.html', membros=membros)
+
+# Rota para servir arquivos estáticos (CSS, JS, etc.)
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
 
 # Rota para o login
 @app.route('/login', methods=['GET', 'POST'])
@@ -148,4 +153,5 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
