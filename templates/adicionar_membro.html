@@ -5,30 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar Membro</title>
     <style>
-        /* Estilo do corpo */
         body {
-            background: linear-gradient(to right, #4a90e2, #9013fe); /* Gradiente de fundo */
-            height: 100vh; /* Altura total da janela */
+            background: linear-gradient(to right, #1a1a1a, #333333); /* Gradiente escuro */
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Arial', sans-serif;
-            color: white;
+            font-family: 'Courier New', Courier, monospace; /* Fonte estilo hacker */
+            color: #00ff00; /* Texto verde */
             margin: 0;
+            overflow: hidden; /* Esconde barra de rolagem */
         }
 
-        /* Estilo do container do formulário */
         .add-member-container {
-            background: rgba(255, 255, 255, 0.2); /* Fundo branco com transparência */
-            border-radius: 10px; /* Cantos arredondados */
+            background: rgba(255, 255, 255, 0.1); /* Fundo escuro e semi-transparente */
+            border-radius: 10px;
             padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra do box */
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.7); /* Sombra mais escura com brilho verde */
             text-align: center;
-            width: 90%; /* Largura adaptável */
-            max-width: 400px; /* Largura máxima */
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 1s ease-in-out; /* Animação de entrada */
         }
 
-        /* Estilo dos rótulos */
+        /* Animação de fade-in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         label {
             display: block;
             margin-bottom: 5px;
@@ -36,91 +47,95 @@
             color: #ffffff; /* Cor dos rótulos */
         }
 
-        /* Estilo dos campos de input */
         input[type="text"],
         input[type="number"],
         select {
-            width: 100%; /* Largura total */
+            width: 100%;
             padding: 10px;
-            margin: 10px 0; /* Margem superior e inferior */
-            border: none; /* Sem borda */
-            border-radius: 5px; /* Cantos arredondados */
-            transition: background-color 0.3s; /* Transição suave */
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2); /* Fundo dos inputs */
+            color: #00ff00; /* Texto dos inputs */
+            transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
         }
 
-        /* Efeito ao focar nos inputs */
         input[type="text"]:focus,
         input[type="number"]:focus,
         select:focus {
-            background-color: rgba(255, 255, 255, 0.6); /* Muda a cor de fundo ao focar */
+            background-color: rgba(255, 255, 255, 0.4); /* Cor ao focar */
+            transform: scale(1.02); /* Aumenta levemente ao focar */
         }
 
-        /* Estilo do botão */
         button {
-            background-color: #4a90e2; /* Cor de fundo do botão */
-            color: white; /* Cor do texto do botão */
+            background-color: #00ff00; /* Cor de fundo do botão */
+            color: black; /* Cor do texto do botão */
             padding: 10px;
-            border: none; /* Sem borda */
-            border-radius: 5px; /* Cantos arredondados */
-            cursor: pointer; /* Cursor em forma de mão */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
-            width: 100%; /* Largura total */
-            margin-top: 10px; /* Margem superior */
+            transition: background-color 0.3s, transform 0.3s;
+            width: 100%;
+            margin-top: 10px;
         }
 
-        /* Efeito ao passar o mouse no botão */
         button:hover {
-            background-color: #357ABD; /* Cor do botão ao passar o mouse */
-            transform: scale(1.05); /* Aumenta levemente o botão */
+            background-color: #009900; /* Cor do botão ao passar o mouse */
+            transform: scale(1.05);
         }
 
-        /* Estilo do título */
         h1 {
             margin-bottom: 20px;
-            font-size: 24px; /* Tamanho do texto do título */
+            font-size: 24px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8); /* Efeito de sombra no texto */
+            animation: glow 1.5s infinite alternate; /* Animação de brilho */
         }
 
-        /* Estilo da lista de membros */
+        /* Animação de brilho */
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(0, 255, 0, 1);
+            }
+        }
+
         .member-list {
-            list-style: none; /* Remove os marcadores */
-            padding: 0; /* Remove o padding */
+            list-style: none;
+            padding: 0;
         }
 
-        /* Estilo dos itens da lista de membros */
         .member-item {
             background: rgba(255, 255, 255, 0.1); /* Fundo semi-transparente */
-            border-radius: 5px; /* Cantos arredondados */
+            border-radius: 5px;
             padding: 10px;
-            margin: 10px 0; /* Margem entre os itens */
+            margin: 10px 0;
             display: flex;
-            justify-content: space-between; /* Espaça os elementos */
-            align-items: center; /* Alinha verticalmente */
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* Estilo dos formulários de ação */
         .action-form {
-            display: inline; /* Mantém as ações na mesma linha */
+            display: inline;
         }
 
-        /* Estilo do link de logout */
         .logout-link {
             display: block;
             margin-top: 20px;
-            color: #ffffff; /* Cor do link */
-            text-decoration: none; /* Sem sublinhado */
-            transition: color 0.3s; /* Transição suave */
+            color: #00ff00; /* Cor do link */
+            text-decoration: none;
+            transition: color 0.3s;
         }
 
-        /* Efeito ao passar o mouse no link */
         .logout-link:hover {
             color: #ffcc00; /* Cor do link ao passar o mouse */
         }
 
-        /* Responsividade */
         @media (max-width: 600px) {
             h1 {
-                font-size: 20px; /* Reduz tamanho do título em telas menores */
+                font-size: 20px;
             }
         }
     </style>
@@ -163,5 +178,7 @@
     </div>
 </body>
 </html>
+
+
 
 
