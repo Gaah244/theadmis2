@@ -61,6 +61,11 @@ def progresso():
     membros = [{"id": m[0], "nome": m[1], "progresso": m[2], "foto": m[3] or "default.jpg"} for m in membros]
     return render_template('progresso.html', membros=membros)
 
+# Rota para a página de missões
+@app.route('/missao')
+def missoes():
+    return render_template('missoes.html')
+
 # Rota para servir arquivos estáticos (CSS, JS, etc.)
 @app.route('/static/<path:filename>')
 def static_files(filename):
@@ -173,6 +178,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-

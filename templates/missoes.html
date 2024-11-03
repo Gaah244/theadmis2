@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missões</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-color: #1a1a1a; /* Fundo escuro */
+            color: #00ff00; /* Texto verde */
+            font-family: 'Courier New', Courier, monospace; /* Fonte estilo hacker */
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            animation: flicker 1.5s infinite alternate; /* Animação de piscada */
+        }
+        ul {
+            list-style-type: none; /* Remove marcadores da lista */
+            padding: 0;
+        }
+        li {
+            margin: 15px 0; /* Espaçamento entre as missões */
+            padding: 10px;
+            background-color: rgba(0, 255, 0, 0.1); /* Fundo leve para as missões */
+            border-radius: 5px; /* Cantos arredondados */
+            transition: transform 0.2s; /* Efeito de transição */
+        }
+        li:hover {
+            transform: scale(1.05); /* Aumenta o item ao passar o mouse */
+        }
+        a {
+            color: #00cc00; /* Cor do link */
+            text-decoration: none; /* Remove sublinhado */
+            margin-top: 20px;
+            display: inline-block;
+            transition: color 0.3s; /* Transição suave para o hover */
+        }
+        a:hover {
+            color: #00ff00; /* Muda a cor do link ao passar o mouse */
+        }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Missões</h1>
+    <ul>
+        <li>Missão 1: Descrição da missão 1</li>
+        <li>Missão 2: Descrição da missão 2</li>
+        <li>Missão 3: Descrição da missão 3</li>
+        <li>Missão 4: Descrição da missão 4</li>
+        <li>Missão 5: Descrição da missão 5</li>
+    </ul>
+    <a href="{{ url_for('index') }}">Voltar</a>
+</body>
+</html>
+
+

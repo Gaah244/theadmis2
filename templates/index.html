@@ -44,6 +44,11 @@
             border-radius: 5px;
             cursor: pointer;
             z-index: 2;
+            transition: background-color 0.3s ease, transform 0.2s; /* Animação */
+        }
+        .menu-button:hover {
+            background-color: rgba(0, 0, 255, 1);
+            transform: scale(1.05); /* Efeito de zoom */
         }
         .menu {
             display: none;
@@ -63,6 +68,7 @@
             padding: 10px 0;
             text-align: center;
             width: 100%;
+            margin-top: auto; /* Adicionado para empurrar o rodapé para o fim da página */
         }
         .membros {
             display: flex;
@@ -70,6 +76,7 @@
             justify-content: center;
             margin: 20px;
             margin-top: 80px; /* Para evitar sobreposição com a barra superior */
+            flex-grow: 1; /* Permitir que a seção de membros expanda */
         }
         .membro {
             background: rgba(255, 255, 255, 0.8);
@@ -79,6 +86,9 @@
             width: 200px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centraliza o conteúdo do membro */
         }
         .membro:hover {
             transform: scale(1.05);
@@ -88,6 +98,7 @@
             border-radius: 10px;
             overflow: hidden;
             margin-top: 10px;
+            width: 100%; /* Ocupa toda a largura disponível */
         }
         .progress {
             height: 20px;
@@ -118,12 +129,12 @@
         The Admins
         <button class="menu-button" onclick="toggleMenu()">Menu</button>
         <div class="menu">
-            <a href="missao.html" style="color: white; text-decoration: none;">Missões</a>
+            <a href="missao" style="color: white; text-decoration: none;">Missões</a>
         </div>
     </div>
 
     <div class="content">
-        <h1>Progresso dos Membros</h1>
+        <h1 style="margin-top: 60px;">Progresso dos Membros</h1>
         <div class="membros">
             {% for membro in membros %}
                 <div class="membro">
@@ -152,10 +163,15 @@
         function toggleMenu() {
             const menuButton = document.querySelector('.menu-button');
             menuButton.classList.toggle('active');
+            const menu = document.querySelector('.menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block'; // Alternar visibilidade do menu
         }
     </script>
 </body>
 </html>
+
+
+
 
 
 
