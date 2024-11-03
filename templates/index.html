@@ -116,8 +116,7 @@
                     {% endif %}
                 </div>
             {% else %}
-                <img src="{{ url_for('static', filename='img/default.jpg') }}" 
-                     alt="Imagem padrão" class="member-image"> <!-- Imagem padrão se não houver -->
+                <p>Nenhum membro encontrado.</p> <!-- Exibe mensagem se não houver membros -->
             {% endfor %}
         </div>
     </div>
@@ -128,6 +127,7 @@
     </footer>
 </body>
 </html>
+
 
 
 
