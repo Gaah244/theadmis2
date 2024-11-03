@@ -27,7 +27,7 @@ def init_db():
 # Chame a função ao iniciar o app
 init_db()
 
-# Rota para a página de progresso dos membros
+# Rota para a página inicial
 @app.route('/')
 def index():
     try:
@@ -43,6 +43,23 @@ def index():
     
     membros = [{"id": m[0], "nome": m[1], "progresso": m[2], "foto": m[3] or "default.jpg"} for m in membros]
     return render_template('index.html', membros=membros)
+
+# Rota para a página de progresso dos membros
+@app.route('/progresso')
+def progresso():
+    try:
+        conn = sqlite3.connect('membros.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, nome, progresso, foto FROM membros")
+        membros = cursor.fetchall()
+    except Exception as e:
+        print(f"Erro ao buscar membros: {e}")
+        membros = []
+    finally:
+        conn.close()
+    
+    membros = [{"id": m[0], "nome": m[1], "progresso": m[2], "foto": m[3] or "default.jpg"} for m in membros]
+    return render_template('progresso.html', membros=membros)
 
 # Rota para servir arquivos estáticos (CSS, JS, etc.)
 @app.route('/static/<path:filename>')
@@ -156,5 +173,6 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
