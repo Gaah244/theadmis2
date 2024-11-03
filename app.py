@@ -7,18 +7,22 @@ app.secret_key = 'chave_secreta_para_sessao'
 
 # Função para configurar o banco de dados
 def init_db():
-    conn = sqlite3.connect('membros.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS membros (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            progresso INTEGER NOT NULL,
-            foto TEXT
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect('membros.db')
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS membros (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                progresso INTEGER NOT NULL,
+                foto TEXT
+            )
+        ''')
+        conn.commit()
+    except Exception as e:
+        print(f"Erro ao inicializar o banco de dados: {e}")
+    finally:
+        conn.close()
 
 # Chame a função ao iniciar o app
 init_db()
@@ -26,15 +30,18 @@ init_db()
 # Rota para a página de progresso dos membros
 @app.route('/')
 def index():
-    conn = sqlite3.connect('membros.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nome, progresso, foto FROM membros")
-    membros = cursor.fetchall()
-    conn.close()
+    try:
+        conn = sqlite3.connect('membros.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, nome, progresso, foto FROM membros")
+        membros = cursor.fetchall()
+    except Exception as e:
+        print(f"Erro ao buscar membros: {e}")
+        membros = []
+    finally:
+        conn.close()
     
-    # Organize os membros em um formato fácil de usar no HTML
     membros = [{"id": m[0], "nome": m[1], "progresso": m[2], "foto": m[3] or "default.jpg"} for m in membros]
-    
     return render_template('index.html', membros=membros)
 
 # Rota para o login
@@ -43,7 +50,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username == 'admin' and password == 'senha123':  # Usuário e senha para exemplo
+        if username == 'admin' and password == 'senha123':
             session['logged_in'] = True
             return redirect(url_for('adicionar_membro'))
         else:
@@ -59,22 +66,27 @@ def adicionar_membro():
     if request.method == 'POST':
         nome = request.form['nome']
         progresso = int(request.form['progresso'])
-        
-        # Conectar ao banco e inserir o novo membro
-        conn = sqlite3.connect('membros.db')
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO membros (nome, progresso) VALUES (?, ?)", (nome, progresso))
-        conn.commit()
-        conn.close()
-        
+        try:
+            conn = sqlite3.connect('membros.db')
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO membros (nome, progresso) VALUES (?, ?)", (nome, progresso))
+            conn.commit()
+        except Exception as e:
+            print(f"Erro ao adicionar membro: {e}")
+        finally:
+            conn.close()
         return redirect(url_for('index'))
     
-    # Lista de membros para o formulário
-    conn = sqlite3.connect('membros.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nome, progresso FROM membros")
-    membros = cursor.fetchall()
-    conn.close()
+    try:
+        conn = sqlite3.connect('membros.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, nome, progresso FROM membros")
+        membros = cursor.fetchall()
+    except Exception as e:
+        print(f"Erro ao buscar membros para adição: {e}")
+        membros = []
+    finally:
+        conn.close()
     
     return render_template('adicionar_membro.html', membros=membros)
 
@@ -82,33 +94,45 @@ def adicionar_membro():
 @app.route('/aumentar_progresso', methods=['POST'])
 def aumentar_progresso():
     membro_id = request.form['membro_id']
-    conn = sqlite3.connect('membros.db')
-    cursor = conn.cursor()
-    cursor.execute("UPDATE membros SET progresso = MIN(progresso + 10, 100) WHERE id = ?", (membro_id,))
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect('membros.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE membros SET progresso = MIN(progresso + 10, 100) WHERE id = ?", (membro_id,))
+        conn.commit()
+    except Exception as e:
+        print(f"Erro ao aumentar progresso: {e}")
+    finally:
+        conn.close()
     return redirect(url_for('adicionar_membro'))
 
 # Rota para diminuir o progresso de um membro
 @app.route('/diminuir_progresso', methods=['POST'])
 def diminuir_progresso():
     membro_id = request.form['membro_id']
-    conn = sqlite3.connect('membros.db')
-    cursor = conn.cursor()
-    cursor.execute("UPDATE membros SET progresso = MAX(progresso - 10, 0) WHERE id = ?", (membro_id,))
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect('membros.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE membros SET progresso = MAX(progresso - 10, 0) WHERE id = ?", (membro_id,))
+        conn.commit()
+    except Exception as e:
+        print(f"Erro ao diminuir progresso: {e}")
+    finally:
+        conn.close()
     return redirect(url_for('adicionar_membro'))
 
 # Rota para remover membro
 @app.route('/remover', methods=['POST'])
 def remover_membro():
     membro_id = request.form['membro_id']
-    conn = sqlite3.connect('membros.db')
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM membros WHERE id = ?", (membro_id,))
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect('membros.db')
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM membros WHERE id = ?", (membro_id,))
+        conn.commit()
+    except Exception as e:
+        print(f"Erro ao remover membro: {e}")
+    finally:
+        conn.close()
     return redirect(url_for('adicionar_membro'))
 
 # Rota para logout
@@ -119,6 +143,7 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
