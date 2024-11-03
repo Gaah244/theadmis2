@@ -37,12 +37,42 @@
             z-index: 1;
         }
 
-        /* Ajuste de margem para o conteúdo principal para não ficar atrás da faixa */
-        .content {
-            margin-top: 60px; /* Deixa espaço para a faixa */
-            flex: 1; /* Faz o conteúdo ocupar o espaço restante da página */
-            padding: 20px; /* Espaçamento ao redor do conteúdo */
-            box-sizing: border-box; /* Para incluir padding nas dimensões */
+        /* Botão de menu */
+        .menu-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 255, 0.8);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        /* Estilo para o menu */
+        .menu {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            background-color: rgba(0, 0, 255, 0.8);
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 2;
+        }
+
+        .menu-button.active + .menu {
+            display: block;
+        }
+
+        /* Estilo para o rodapé */
+        footer {
+            background-color: rgba(0, 0, 255, 0.37); /* Fundo azul com transparência */
+            padding: 10px 0;
+            text-align: center;
+            width: 100%;
         }
 
         /* Estilo para os membros */
@@ -83,48 +113,73 @@
         }
 
         /* Estilo da imagem do membro */
-        .Aqui está a continuação do código para a página `progresso.html`:
+        .member-image {
+            width: 80px; /* Aumenta a largura da imagem */
+            height: 80px; /* Aumenta a altura da imagem */
+            border-radius: 50%; /* Arredonda a imagem */
+            object-fit: cover; /* Cobre a área da imagem */
+            margin-bottom: 10px; /* Espaçamento inferior da imagem */
+        }
 
-### `templates/progresso.html` (Continuação)
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .membro {
+                width: 90%; /* Largura adaptável para dispositivos menores */
+            }
 
-```html
-        .foto {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%; /* Torna a imagem circular */
-            margin-bottom: 10px; /* Espaço abaixo da imagem */
+            .top-bar {
+                font-size: 20px; /* Tamanho da fonte reduzido */
+            }
         }
     </style>
 </head>
 <body>
-    <div class="top-bar">Progresso dos Membros</div>
+    <!-- Faixa azul transparente -->
+    <div class="top-bar">
+        The Admins
+        <button class="menu-button" onclick="toggleMenu()">Menu</button>
+        <div class="menu">
+            <a href="missao.html" style="color: white; text-decoration: none;">Missões</a>
+        </div>
+    </div>
+
+    <!-- Conteúdo principal com margem superior -->
     <div class="content">
+        <h1>Progresso dos Membros</h1>
         <div class="membros">
             {% for membro in membros %}
-            <div class="membro">
-                <img src="{{ url_for('static', filename='img/' + membro.foto) }}" alt="{{ membro.nome }}" class="foto">
-                <h3>{{ membro.nome }}</h3>
-                <div class="progress-bar">
-                    <div class="progress" style="width: {{ membro.progresso }}%;">{{ membro.progresso }}%</div>
+                <div class="membro">
+                    <img src="{{ url_for('static', filename='img/' + membro['foto']) }}" 
+                         alt="{{ membro['nome'] }}" class="member-image">
+                    <h2>{{ membro['nome'] }}</h2>
+                    <p>Progresso: {{ membro['progresso'] }}%</p>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: {{ membro['progresso'] }}%;">{{ membro['progresso'] }}%</div>
+                    </div>
+                    {% if membro['progresso'] == 100 %}
+                        <p>Membro Aprovado!</p>
+                    {% endif %}
                 </div>
-                <form action="{{ url_for('aumentar_progresso') }}" method="POST">
-                    <input type="hidden" name="membro_id" value="{{ membro.id }}">
-                    <button type="submit">Aumentar Progresso</button>
-                </form>
-                <form action="{{ url_for('diminuir_progresso') }}" method="POST">
-                    <input type="hidden" name="membro_id" value="{{ membro.id }}">
-                    <button type="submit">Diminuir Progresso</button>
-                </form>
-                <form action="{{ url_for('remover_membro') }}" method="POST">
-                    <input type="hidden" name="membro_id" value="{{ membro.id }}">
-                    <button type="submit" style="background-color: red; color: white;">Remover Membro</button>
-                </form>
-            </div>
+            {% else %}
+                <p>Nenhum membro encontrado.</p> <!-- Exibe mensagem se não houver membros -->
             {% endfor %}
         </div>
     </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>by zetsu</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menuButton = document.querySelector('.menu-button');
+            menuButton.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>
+
 
 
 
