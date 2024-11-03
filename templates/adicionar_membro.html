@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Membro</title>
+    <style>
+        /* Estilo do corpo */
+        body {
+            background: linear-gradient(to right, #4a90e2, #9013fe); /* Gradiente de fundo */
+            height: 100vh; /* Altura total da janela */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            margin: 0;
+        }
+
+        /* Estilo do container do formulário */
+        .add-member-container {
+            background: rgba(255, 255, 255, 0.2); /* Fundo branco com transparência */
+            border-radius: 10px; /* Cantos arredondados */
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra do box */
+            text-align: center;
+            width: 400px; /* Largura do container */
+        }
+
+        /* Estilo dos rótulos */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #ffffff; /* Cor dos rótulos */
+        }
+
+        /* Estilo dos campos de input */
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%; /* Largura total */
+            padding: 10px;
+            margin: 10px 0; /* Margem superior e inferior */
+            border: none; /* Sem borda */
+            border-radius: 5px; /* Cantos arredondados */
+            transition: background-color 0.3s; /* Transição suave */
+        }
+
+        /* Efeito ao focar nos inputs */
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            background-color: rgba(255, 255, 255, 0.6); /* Muda a cor de fundo ao focar */
+        }
+
+        /* Estilo do botão */
+        button {
+            background-color: #4a90e2; /* Cor de fundo do botão */
+            color: white; /* Cor do texto do botão */
+            padding: 10px;
+            border: none; /* Sem borda */
+            border-radius: 5px; /* Cantos arredondados */
+            cursor: pointer; /* Cursor em forma de mão */
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
+            width: 100%; /* Largura total */
+            margin-top: 10px; /* Margem superior */
+        }
+
+        /* Efeito ao passar o mouse no botão */
+        button:hover {
+            background-color: #357ABD; /* Cor do botão ao passar o mouse */
+            transform: scale(1.05); /* Aumenta levemente o botão */
+        }
+
+        /* Estilo do título */
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px; /* Tamanho do texto do título */
+        }
+
+        /* Estilo da lista de membros */
+        .member-list {
+            list-style: none; /* Remove os marcadores */
+            padding: 0; /* Remove o padding */
+        }
+
+        /* Estilo dos itens da lista de membros */
+        .member-item {
+            background: rgba(255, 255, 255, 0.1); /* Fundo semi-transparente */
+            border-radius: 5px; /* Cantos arredondados */
+            padding: 10px;
+            margin: 10px 0; /* Margem entre os itens */
+            display: flex;
+            justify-content: space-between; /* Espaça os elementos */
+            align-items: center; /* Alinha verticalmente */
+        }
+
+        /* Estilo dos formulários de ação */
+        .action-form {
+            display: inline; /* Mantém as ações na mesma linha */
+        }
+
+        /* Estilo do link de logout */
+        .logout-link {
+            display: block;
+            margin-top: 20px;
+            color: #ffffff; /* Cor do link */
+            text-decoration: none; /* Sem sublinhado */
+            transition: color 0.3s; /* Transição suave */
+        }
+
+        /* Efeito ao passar o mouse no link */
+        .logout-link:hover {
+            color: #ffcc00; /* Cor do link ao passar o mouse */
+        }
+    </style>
+</head>
+<body>
+    <div class="add-member-container">
+        <h1>Adicionar Novo Membro</h1>
+        <form action="{{ url_for('adicionar_membro') }}" method="post">
+            <label>Nome:</label>
+            <input type="text" name="nome" required>
+            <label>Progresso (%):</label>
+            <input type="number" name="progresso" min="0" max="100" required>
+            <button type="submit">Adicionar</button>
+        </form>
+
+        <h1>Membros Existentes</h1>
+        <ul class="member-list">
+            {% for membro in membros %}
+                <li class="member-item">
+                    <span>{{ membro[1] }} - Progresso: {{ membro[2] }}%</span>
+                    <div class="member-actions">
+                        <form action="{{ url_for('remover_membro') }}" method="post" class="action-form">
+                            <input type="hidden" name="membro_id" value="{{ membro[0] }}">
+                            <button type="submit">Remover</button>
+                        </form>
+                        <form action="{{ url_for('aumentar_progresso') }}" method="post" class="action-form">
+                            <input type="hidden" name="membro_id" value="{{ membro[0] }}">
+                            <button type="submit">Aumentar Progresso</button>
+                        </form>
+                        <form action="{{ url_for('diminuir_progresso') }}" method="post" class="action-form">
+                            <input type="hidden" name="membro_id" value="{{ membro[0] }}">
+                            <button type="submit">Diminuir Progresso</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+    </div>
+</body>
+</html>
+

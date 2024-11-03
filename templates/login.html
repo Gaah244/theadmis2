@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Estilo do corpo */
+        body {
+            background: linear-gradient(to right, #4a90e2, #9013fe); /* Gradiente de fundo */
+            height: 100vh; /* Altura total da janela */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            margin: 0;
+        }
+
+        /* Estilo do container do formulário */
+        .login-container {
+            background: rgba(255, 255, 255, 0.2); /* Fundo branco com transparência */
+            border-radius: 10px; /* Cantos arredondados */
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Sombra do box */
+            text-align: center;
+            width: 300px; /* Largura do container */
+        }
+
+        /* Estilo dos rótulos */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* Estilo dos campos de input */
+        input[type="text"],
+        input[type="password"] {
+            width: 100%; /* Largura total */
+            padding: 10px;
+            margin: 10px 0; /* Margem superior e inferior */
+            border: none; /* Sem borda */
+            border-radius: 5px; /* Cantos arredondados */
+            transition: background-color 0.3s; /* Transição suave */
+        }
+
+        /* Efeito ao focar nos inputs */
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            background-color: rgba(255, 255, 255, 0.6); /* Muda a cor de fundo ao focar */
+        }
+
+        /* Estilo do botão */
+        button {
+            background-color: #4a90e2; /* Cor de fundo do botão */
+            color: white; /* Cor do texto do botão */
+            padding: 10px;
+            border: none; /* Sem borda */
+            border-radius: 5px; /* Cantos arredondados */
+            cursor: pointer; /* Cursor em forma de mão */
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
+            width: 100%; /* Largura total */
+        }
+
+        /* Efeito ao passar o mouse no botão */
+        button:hover {
+            background-color: #357ABD; /* Cor do botão ao passar o mouse */
+            transform: scale(1.05); /* Aumenta levemente o botão */
+        }
+
+        /* Estilo do título */
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px; /* Tamanho do texto do título */
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <form action="{{ url_for('login') }}" method="post">
+            <label>Usuário:</label>
+            <input type="text" name="username" required>
+            <label>Senha:</label>
+            <input type="password" name="password" required>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+</body>
+</html>
