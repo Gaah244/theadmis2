@@ -16,10 +16,7 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            position: relative; /* Para a animação */
+           
         }
         .top-bar {
             background-color: rgba(0, 0, 255, 0.37);
@@ -65,7 +62,7 @@
             display: block;
         }
         footer {
-            background-color: rgba(0, 0, 255, 0.37);
+            background-color: rgba(0, 0, 255, 0);
             padding: 10px 0;
             text-align: center;
             width: 100%;
@@ -167,6 +164,18 @@
                 font-size: 20px;
             }
         }
+        display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Altura total da janela */
+            margin: 0;
+            font-family: Arial, sans-serif;
+        .social-links {
+    display: flex;
+    justify-content: center; /* Centraliza os ícones sociais */
+    gap: 10px; /* Espaçamento entre os ícones */
+    align-items: center;
+}
     </style>
 </head>
 <body>
@@ -174,7 +183,9 @@
         <span class="title">The Admins</span>
         <button class="menu-button" onclick="toggleMenu()">Menu</button>
         <div class="menu">
-            <a href="missao" style="color: white; text-decoration: none;">Missões</a>
+            <a 
+            href="missao" 
+            style="color: white; text-decoration: none;">Missões</a>
         </div>
     </div>
 
@@ -214,6 +225,15 @@
             {% endfor %}
         </div>
     </div>
+    <div class="social-links">
+      <!-- Link para WhatsApp com logo -->
+      <a href="https://wa.me/55XXXXXXXXXXX" target="_blank">
+        <img src="static/img/whatsapp.png" alt="WhatsApp" style="width: 40px; height: 40px;">
+      </a>
+      <a
+        href="https://www.youtube.com/seucanal" target="_blank">
+        <img src="static/img/youtube.png" alt="YouTube" style="width: 40px; height: 40px;">
+    </a>
 
     <footer>
         <p>by zetsu</p>
@@ -229,7 +249,3 @@
     </script>
 </body>
 </html>
-
-
-
-
