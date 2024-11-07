@@ -18,6 +18,44 @@
             padding: 0;
            
         }
+
+        .modal {
+            display: block; /* Mostrar o modal inicialmente */
+            position: fixed;
+            z-index: 4;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #333;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+        .modal-content label {
+            display: block;
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: left;
+        }
+        .modal-content button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: none;
+            color: #fff;
+            background-color: #4CAF50;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
         .top-bar {
             background-color: rgba(0, 0, 255, 0.37);
             color: white;
@@ -32,22 +70,28 @@
             z-index: 1;
         }
         .menu-button {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(0, 0, 255, 0);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 2;
-            transition: background-color 0.3s ease, transform 0.2s; /* Animação */
-        }
-        .menu-button:hover {
-            background-color: rgba(0, 0, 255, 0);
-            transform: scale(1.05); /* Efeito de zoom */
-        }
+    position: fixed;
+    top: 03px;
+    left: 10px;
+    padding: 10px 20px;
+    border: 2px solid #00ff00;
+    background: linear-gradient(135deg, #0033cc, #000000);
+    color: #00ff00;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 2;
+    transition: 0.4s ease;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.5), 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+        ..menu-button:hover {
+    background: linear-gradient(135deg, #000000, #0033cc);
+    color: #ffffff;
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(0, 255, 0, 0.7), 0 0 20px rgba(0, 255, 0, 0.5);
+}
         .menu {
             display: none;
             position: absolute;
@@ -58,9 +102,10 @@
             padding: 10px;
             z-index: 2;
         }
-        .menu-button.active + .menu {
-            display: block;
-        }
+        .menu-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.4), 0 0 10px rgba(0, 255, 0, 0.2);
+}
         footer {
             background-color: rgba(0, 0, 255, 0);
             padding: 10px 0;
@@ -148,6 +193,40 @@
             animation: glitch 1s infinite;
             color: #00ff00;
         }
+
+        .sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.9);
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+        z-index: 3;
+    }
+
+    .sidebar a {
+        padding: 10px 15px;
+        text-decoration: none;
+        font-size: 20px;
+        color: #00ff00;
+        display: block;
+        transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+        color: #ffffff;
+    }
+
+    .sidebar .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 36px;
+    }
+
         @keyframes glitch {
             0% { text-shadow: 2px 0 red; }
             20% { text-shadow: -2px 0 blue; }
@@ -179,14 +258,28 @@
     </style>
 </head>
 <body>
+
+    <div id="termsModal" class="modal" style="display: {% if not terms_accepted %}block{% else %}none{% endif %}">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('termsModal').style.display='none'">&times;</span>
+            <h2>Aceitar Termos e Política de Privacidade</h2>
+            <p>Antes de continuar, por favor, aceite os termos e a política de privacidade.</p>
+            <input type="checkbox" id="acceptTerms"> Aceito os termos e a política de privacidade
+            <button onclick="acceptTerms()">Aceitar</button>
+        </div>
+    </div>
+
     <div class="top-bar">
         <span class="title">The Admins</span>
-        <button class="menu-button" onclick="toggleMenu()">Menu</button>
-        <div class="menu">
-            <a 
-            href="missao" 
-            style="color: white; text-decoration: none;">Missões</a>
-        </div>
+        <button class="menu-button" onclick="openSidebar()">Menu</button>
+    </div>
+    
+    <div id="sidebar" class="sidebar">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">×</a>
+        <a href="missao">Missões</a>
+        <!-- Outros links do menu podem ser adicionados aqui -->
+    </div>
+    
     </div>
 
     <div class="matrix">
@@ -239,12 +332,35 @@
         <p>by zetsu</p>
     </footer>
 
+
     <script>
-        function toggleMenu() {
-            const menuButton = document.querySelector('.menu-button');
-            menuButton.classList.toggle('active');
-            const menu = document.querySelector('.menu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block'; // Alternar visibilidade do menu
+        function acceptTerms() {
+        var checkbox = document.getElementById("acceptTerms");
+        if (checkbox.checked) {
+            // Definir o cookie para lembrar que o usuário aceitou os termos
+            document.cookie = "termsAccepted=true; path=/; max-age=" + 60*60*24*365;  // O cookie expira em 1 ano
+            document.getElementById("termsModal").style.display = "none";  // Fechar o modal
+        } else {
+            alert("Por favor, aceite os termos e condições.");
+        }
+    }
+
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
+        }
+    </script>
+
+    <script>
+        function openSidebar() {
+            document.getElementById("sidebar").style.width = "250px";
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").style.width = "0";
         }
     </script>
 </body>

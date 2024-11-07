@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, make_response
 
 # Inicialize o app
 app = Flask(__name__)
@@ -15,7 +15,8 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
                 progresso INTEGER NOT NULL,
-                foto TEXT
+                foto TEXT,
+                aceitou_termos BOOLEAN DEFAULT 0
             )
         ''')
         conn.commit()
@@ -30,6 +31,9 @@ init_db()
 # Rota para a página inicial
 @app.route('/')
 def index():
+    # Verifica se o cookie de aceitação de termos existe
+    terms_accepted = request.cookies.get('termsAccepted')
+
     try:
         conn = sqlite3.connect('membros.db')
         cursor = conn.cursor()
@@ -40,9 +44,9 @@ def index():
         membros = []
     finally:
         conn.close()
-    
+
     membros = [{"id": m[0], "nome": m[1], "progresso": m[2], "foto": m[3] or "default.jpg"} for m in membros]
-    return render_template('index.html', membros=membros)
+    return render_template('index.html', membros=membros, terms_accepted=terms_accepted)
 
 # Rota para a página de progresso dos membros
 @app.route('/progresso')
@@ -57,7 +61,7 @@ def progresso():
         membros = []
     finally:
         conn.close()
-    
+
     membros = [{"id": m[0], "nome": m[1], "progresso": m[2], "foto": m[3] or "default.jpg"} for m in membros]
     return render_template('progresso.html', membros=membros)
 
@@ -89,11 +93,11 @@ def login():
 def adicionar_membro():
     if 'logged_in' not in session:
         return redirect(url_for('login'))
-    
+
     if request.method == 'POST':
         nome = request.form.get('nome')
         progresso = request.form.get('progresso')
-        
+
         if nome and progresso:
             try:
                 conn = sqlite3.connect('membros.db')
@@ -105,7 +109,7 @@ def adicionar_membro():
             finally:
                 conn.close()
             return redirect(url_for('index'))
-    
+
     try:
         conn = sqlite3.connect('membros.db')
         cursor = conn.cursor()
@@ -116,7 +120,7 @@ def adicionar_membro():
         membros = []
     finally:
         conn.close()
-    
+
     return render_template('adicionar_membro.html', membros=membros)
 
 # Rota para aumentar o progresso de um membro
@@ -175,6 +179,13 @@ def remover_membro():
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('index'))
+
+@app.route('/aceitar_termos', methods=['POST'])
+def aceitar_termos():
+    resp = make_response(redirect(url_for('index')))
+    # Define o cookie para lembrar que o usuário aceitou os termos
+    resp.set_cookie('termsAccepted', 'true', max_age=60*60*24*365)  # O cookie expira em 1 ano
+    return resp
 
 if __name__ == '__main__':
     app.run(debug=True)
