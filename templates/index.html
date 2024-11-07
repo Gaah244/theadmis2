@@ -19,19 +19,55 @@
            
         }
 
-        .modal {
-            display: block; /* Mostrar o modal inicialmente */
-            position: fixed;
-            z-index: 4;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        /* Estilos do modal */
+#termsModal {
+    display: none; /* O modal estará oculto por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente */
+    z-index: 9999; /* Para garantir que o modal fique sobre outros elementos */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilos do conteúdo do modal */
+#termsModal .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%; /* Ajuste a largura conforme necessário */
+    max-width: 600px; /* Largura máxima para o modal */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para o botão de fechar */
+#termsModal .close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+/* Estilo do botão aceitar */
+#termsModal button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#termsModal button:hover {
+    background-color: #45a049;
+}
+
         .modal-content {
             background-color: #333;
             color: #00ff00;
