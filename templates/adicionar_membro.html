@@ -7,14 +7,15 @@
     <style>
         body {
             background: linear-gradient(to right, #1a1a1a, #333333); /* Gradiente escuro */
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Alinhamento no topo para permitir rolagem */
             font-family: 'Courier New', Courier, monospace; /* Fonte estilo hacker */
             color: #00ff00; /* Texto verde */
             margin: 0;
-            overflow: hidden; /* Esconde barra de rolagem */
+            padding: 20px; /* Espaço ao redor do container */
+            overflow-y: auto; /* Permitir rolagem vertical */
         }
 
         .add-member-container {
@@ -178,7 +179,3 @@
     </div>
 </body>
 </html>
-
-
-
-

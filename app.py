@@ -10,6 +10,8 @@ def init_db():
     try:
         conn = sqlite3.connect('membros.db')
         cursor = conn.cursor()
+        
+        # Cria a tabela membros, se ainda não existir
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS membros (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,11 +21,43 @@ def init_db():
                 aceitou_termos BOOLEAN DEFAULT 0
             )
         ''')
-        conn.commit()
+
+        # Verifica e adiciona a coluna 'aceitou_termos' caso ela não exista
+        cursor.execute("PRAGMA table_info(membros)")
+        columns = [column[1] for column in cursor.fetchall()]
+        if 'aceitou_termos' not in columns:
+            cursor.execute("ALTER TABLE membros ADD COLUMN aceitou_termos BOOLEAN DEFAULT 0")
+            conn.commit()
+        
     except Exception as e:
         print(f"Erro ao inicializar o banco de dados: {e}")
     finally:
         conn.close()
+
+# Função para obter estatísticas
+def obter_estatisticas():
+    try:
+        conn = sqlite3.connect('membros.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM membros")
+        total_membros = cursor.fetchone()[0]
+        
+        cursor.execute("SELECT AVG(progresso) FROM membros")
+        progresso_medio = cursor.fetchone()[0] or 0
+
+        cursor.execute("SELECT COUNT(*) FROM membros WHERE aceitou_termos = 1")
+        membros_termos = cursor.fetchone()[0]
+    except Exception as e:
+        print(f"Erro ao obter estatísticas: {e}")
+        total_membros, progresso_medio, membros_termos = 0, 0, 0
+    finally:
+        conn.close()
+    
+    return {
+        "total_membros": total_membros,
+        "progresso_medio": progresso_medio,
+        "membros_termos": membros_termos
+    }
 
 # Chame a função ao iniciar o app
 init_db()
@@ -31,9 +65,7 @@ init_db()
 # Rota para a página inicial
 @app.route('/')
 def index():
-    # Verifica se o cookie de aceitação de termos existe
     terms_accepted = request.cookies.get('termsAccepted')
-
     try:
         conn = sqlite3.connect('membros.db')
         cursor = conn.cursor()
@@ -70,12 +102,13 @@ def progresso():
 def missoes():
     return render_template('missoes.html')
 
-# Rota para servir arquivos estáticos (CSS, JS, etc.)
-@app.route('/static/<path:filename>')
-def static_files(filename):
-    return send_from_directory('static', filename)
+# Rota para o dashboard
+@app.route('/dashboard')
+def dashboard():
+    estatisticas = obter_estatisticas()
+    return render_template('dashboard.html', estatisticas=estatisticas)
 
-# Rota para o login
+# Rota para login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -133,7 +166,6 @@ def aumentar_progresso():
             cursor = conn.cursor()
             cursor.execute("UPDATE membros SET progresso = MIN(progresso + 10, 100) WHERE id = ?", (membro_id,))
             conn.commit()
-            print(f"Progresso aumentado para o membro ID {membro_id}.")
         except Exception as e:
             print(f"Erro ao aumentar progresso: {e}")
         finally:
@@ -150,7 +182,6 @@ def diminuir_progresso():
             cursor = conn.cursor()
             cursor.execute("UPDATE membros SET progresso = MAX(progresso - 10, 0) WHERE id = ?", (membro_id,))
             conn.commit()
-            print(f"Progresso diminuído para o membro ID {membro_id}.")
         except Exception as e:
             print(f"Erro ao diminuir progresso: {e}")
         finally:
@@ -167,7 +198,6 @@ def remover_membro():
             cursor = conn.cursor()
             cursor.execute("DELETE FROM membros WHERE id = ?", (membro_id,))
             conn.commit()
-            print(f"Membro ID {membro_id} removido.")
         except Exception as e:
             print(f"Erro ao remover membro: {e}")
         finally:
@@ -180,12 +210,14 @@ def logout():
     session.pop('logged_in', None)
     return redirect(url_for('index'))
 
+
+# Rota para aceitar os termos
 @app.route('/aceitar_termos', methods=['POST'])
 def aceitar_termos():
     resp = make_response(redirect(url_for('index')))
-    # Define o cookie para lembrar que o usuário aceitou os termos
     resp.set_cookie('termsAccepted', 'true', max_age=60*60*24*365)  # O cookie expira em 1 ano
     return resp
+
 
 if __name__ == '__main__':
     app.run(debug=True)

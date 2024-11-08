@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Estatísticas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Estilo geral da página */
+        body {
+            background-color: #1a1a1a;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+
+        /* Título */
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: titleAnimation 1.5s ease-in-out infinite alternate;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+        }
+
+        /* Animação do título */
+        @keyframes titleAnimation {
+            0% { color: #00ff00; }
+            50% { color: #ff00ff; }
+            100% { color: #00ff00; }
+        }
+
+        /* Estilo do painel de estatísticas */
+        .estatisticas {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+            transform: scale(1);
+            animation: scaleUp 1s ease-in-out forwards;
+            max-width: 100%;
+            margin: 0 auto;
+            color: #fff;
+            width: 90%; /* A largura da estatística se ajusta */
+            max-width: 600px; /* Limite máximo */
+        }
+
+        /* Animação de aumento do painel */
+        @keyframes scaleUp {
+            0% { transform: scale(0.9); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Estilo das estatísticas individuais */
+        .estatisticas p {
+            font-size: 1.3rem;
+            margin: 15px 0;
+            color: #00ff00;
+        }
+
+        /* Efeitos nos gráficos */
+        .graficos {
+            max-width: 100%;
+            margin: 40px auto;
+            position: relative;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+            animation: fadeInUp 1s ease-out forwards;
+            color: #00ff00;
+            width: 90%; /* A largura do gráfico se ajusta */
+            max-width: 600px; /* Limite máximo */
+        }
+
+        /* Animação do gráfico */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Adicionando bordas e sombras para efeito hacker */
+        .graficos canvas {
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+            width: 100%;
+        }
+
+        /* Efeito no gráfico */
+        canvas {
+            transition: transform 0.3s ease;
+        }
+
+        canvas:hover {
+            transform: scale(1.05);
+        }
+
+        /* Ajustes responsivos */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .estatisticas p {
+                font-size: 1.2rem;
+            }
+
+            .graficos {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .estatisticas p {
+                font-size: 1rem;
+            }
+
+            .graficos {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard de Estatísticas</h1>
+        <div class="estatisticas">
+            <p>Total de Membros: {{ estatisticas.total_membros }}</p>
+            <p>Progresso Médio: {{ estatisticas.progresso_medio }}%</p>
+            <p>Membros que Aceitaram os Termos: {{ estatisticas.membros_termos }}</p>
+        </div>
+
+        <!-- Gráfico de estatísticas -->
+        <div class="graficos">
+            <canvas id="progressoGrafico"></canvas>
+        </div>
+    </div>
+
+
+    <footer>
+        <p>by zetsu</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('progressoGrafico').getContext('2d');
+        var progressoGrafico = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Total de Membros', 'Progresso Médio', 'Aceitaram Termos'],
+                datasets: [{
+                    label: 'Estatísticas',
+                    data: [
+                        {{ estatisticas.total_membros }},
+                        {{ estatisticas.progresso_medio }},
+                        {{ estatisticas.membros_termos }}
+                    ],
+                    backgroundColor: ['#4CAF50', '#00ff00', '#0000ff'],
+                    borderColor: ['#4CAF50', '#00ff00', '#0000ff'],
+                    borderWidth: 2,
+                    hoverBackgroundColor: '#00ff00',
+                    hoverBorderColor: '#000'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#333',
+                        },
+                        ticks: {
+                            color: '#00ff00'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#00ff00'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 255, 0, 0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
