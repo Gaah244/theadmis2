@@ -19,7 +19,7 @@
            
         }
         .modal {
-            display: flex; /* Para garantir que o modal se centralize com flexbox */
+            display: flex; 
             justify-content: center;
             align-items: center;
             position: fixed;
@@ -55,6 +55,41 @@
             background-color: #4CAF50;
             cursor: pointer;
             border-radius: 5px;
+        }
+
+         /* Estilo para o novo modal */
+         .aboutModal {
+            display: none; /* Inicialmente invisível */
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        /* Estilo para o conteúdo do novo modal */
+        .aboutModal .modal-content {
+            background-color: #333;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        /* Estilo para o botão de fechar */
+        .aboutModal .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 30px;
+            color: #fff;
+            cursor: pointer;
         }
 
 
@@ -279,10 +314,27 @@
     <div id="sidebar" class="sidebar">
         <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">×</a>
         <a href="missao">Missões</a>
+        <!-- Novo botão "Sobre" -->
+        <a href="javascript:void(0)" onclick="showMessage()">Sobre</a>
+
         <!-- Outros links do menu podem ser adicionados aqui -->
     </div>
     
     </div>
+
+    <div id="aboutModalContent" class="aboutModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Sobre</h2>
+            <p>Bem-vindo à página de informações! Aqui estão alguns detalhes sobre o projeto:</p>
+            <ul>
+                <li><strong>Objetivo:</strong> Melhorar o sistema de progresso dos membros.</li>
+                <li><strong>Desenvolvedores:</strong> Zetsu, equipe de desenvolvimento.</li>
+                <li><strong>Status:</strong> Em andamento.</li>
+            </ul>
+        </div>
+    </div>
+
 
     <div class="matrix">
         <div style="left: 10%; animation-duration: 2.5s;">01001010</div>
@@ -355,6 +407,16 @@
             document.getElementById("sidebar").style.width = "0";
         }
     </script>
+
+<script>
+    function showMessage() {
+        document.getElementById("aboutModalContent").style.display = "flex"; // Exibe o modal
+    }
+
+    function closeModal() {
+        document.getElementById("aboutModalContent").style.display = "none"; // Esconde o modal
+    }
+</script>
 
     <script>
         function openSidebar() {
