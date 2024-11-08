@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, make_response
+from flask import Flask, render_template, request, redirect, url_for, session, make_response
 
 # Inicialize o app
 app = Flask(__name__)
@@ -39,12 +39,16 @@ def obter_estatisticas():
     try:
         conn = sqlite3.connect('membros.db')
         cursor = conn.cursor()
+        
+        # Total de membros
         cursor.execute("SELECT COUNT(*) FROM membros")
         total_membros = cursor.fetchone()[0]
         
+        # Progresso médio
         cursor.execute("SELECT AVG(progresso) FROM membros")
         progresso_medio = cursor.fetchone()[0] or 0
 
+        # Membros que aceitaram os termos
         cursor.execute("SELECT COUNT(*) FROM membros WHERE aceitou_termos = 1")
         membros_termos = cursor.fetchone()[0]
     except Exception as e:
@@ -216,8 +220,21 @@ def logout():
 def aceitar_termos():
     resp = make_response(redirect(url_for('index')))
     resp.set_cookie('termsAccepted', 'true', max_age=60*60*24*365)  # O cookie expira em 1 ano
-    return resp
+    
+    # Atualiza o status de aceitação dos termos no banco de dados
+    try:
+        membro_id = request.form.get('membro_id')  # Você precisa passar o ID do membro ao aceitar os termos
+        if membro_id:
+            conn = sqlite3.connect('membros.db')
+            cursor = conn.cursor()
+            cursor.execute("UPDATE membros SET aceitou_termos = 1 WHERE id = ?", (membro_id,))
+            conn.commit()
+    except Exception as e:
+        print(f"Erro ao atualizar aceitação de termos: {e}")
+    finally:
+        conn.close()
 
+    return resp
 
 if __name__ == '__main__':
     app.run(debug=True)
